@@ -1,0 +1,32 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "clasificacion_bacalao_atlantico"
+version = "0.0.1"
+description = "Aplicaci\u00f3n de modelos de Aprendizaje Autom\u00e1tico para clasificar lances de investigaci\u00f3n pesquera del mar del Norte seg\u00fan los registros de bacalao del Atl\u00e1ntico, utilizando datos cient\u00edficos de ICES-DATRAS."
+authors = [
+  { name = "M.Ver\u00f3nica Venegas M." },
+]
+
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    
+]
+requires-python = "~=3.14.0"
+
+
+[tool.ruff]
+line-length = 99
+src = ["clasificacion_bacalao_atlantico"]
+include = ["pyproject.toml", "clasificacion_bacalao_atlantico/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["clasificacion_bacalao_atlantico"]
+force-sort-within-sections = true
+
