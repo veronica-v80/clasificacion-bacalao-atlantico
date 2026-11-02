@@ -111,8 +111,6 @@ Como resultado, se obtuvo un dataset procesado de 1.970 observaciones y 13 colum
 
 ## 7. Organización del proyecto
 
-## 7. Organización del proyecto
-
 El proyecto se organiza mediante la plantilla **Cookiecutter Data Science**, que permite separar los datos originales y procesados, los notebooks, el código fuente, los modelos y la documentación, facilitando la organización y reproducibilidad del trabajo.
 
 ```text
