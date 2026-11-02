@@ -109,14 +109,44 @@ Como resultado, se obtuvo un dataset procesado de 1.970 observaciones y 13 colum
 
 ## 7. Organización del proyecto
 
-- `data/raw/`: datos originales.
-- `data/processed/`: datos procesados.
-- `notebooks/`: exploración, procesamiento y análisis.
-- `models/`: modelos entrenados.
-- `reports/`: informes, resultados y visualizaciones.
-- `references/`: documentación complementaria.
-- `clasificacion_bacalao_atlantico/`: archivos Python para el desarrollo del proyecto.
+## 7. Organización del proyecto
 
+El proyecto se organiza mediante la plantilla **Cookiecutter Data Science**, que permite separar los datos originales y procesados, los notebooks, el código fuente, los modelos y la documentación, facilitando la organización y reproducibilidad del trabajo.
+
+```text
+clasificacion-bacalao-atlantico/
+│
+├── data/
+│   ├── raw/                           # Dataset original ICES-DATRAS
+│   │   └── datras_ns_ibts_2020_2025_original.csv
+│   └── processed/                     # Dataset preparado para clasificación
+│       └── lances_bacalao_procesado.csv
+│
+├── models/                            # Modelos entrenados (pendiente)
+│
+├── notebooks/                         # Exploración y procesamiento
+│   └── exploracion_datos_datras.ipynb
+│
+├── reports/
+│   └── figures/                       # Gráficos e imágenes del proyecto
+│
+├── references/                        # Documentación complementaria
+├── docs/                              # Documentación del proyecto
+│
+├── clasificacion_bacalao_atlantico/   # Código Python
+│   ├── config.py
+│   ├── dataset.py
+│   ├── features.py
+│   ├── plots.py
+│   └── modeling/
+│       ├── train.py
+│       └── predict.py
+│
+├── README.md                          # Descripción y documentación
+├── environment.yml                    # Entorno de trabajo
+├── pyproject.toml                     # Configuración del proyecto
+└── Makefile                           # Comandos auxiliares
+```
 ## 8. Estado actual
 
 El proyecto se encuentra en desarrollo.
