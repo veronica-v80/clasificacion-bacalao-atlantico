@@ -38,6 +38,8 @@ Los archivos se organizan en dos conjuntos:
 
 Los datasets original y procesado se incluyen en el proyecto para facilitar la consulta y reproducción del análisis. Los datos provienen de ICES-DATRAS, cuya fuente se reconoce en esta documentación.
 
+**Nota sobre la visualización de los datos:** El dataset original de ICES-DATRAS tiene un tamaño aproximado de 19,7 MB. Debido a las limitaciones de vista previa de GitHub, no se visualiza directamente en el navegador, pero se encuentra disponible para su descarga desde el repositorio. El dataset procesado, de menor tamaño, puede consultarse directamente en formato tabular.
+
 ## 5. Descripción y características del dataset
 
 El conjunto de datos original de ICES-DATRAS contiene dos tipos de registros:
