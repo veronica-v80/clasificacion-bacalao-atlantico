@@ -1,5 +1,5 @@
-# Data
-/data/
+# Datos del proyecto
+# Se incluyen los datasets necesarios para reproducir el análisis.
 
 # Mac OS-specific storage files
 .DS_Store
@@ -187,7 +187,11 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+
 # PyPI configuration file
-.pypirc.virtual_documents/
-/.virtual_documents/
-/anaconda_projects/
+.pypirc
+
+# Carpetas auxiliares
+.virtual_documents/
+anaconda_projects/
+
