@@ -134,7 +134,14 @@ Durante el procesamiento se verificó la correspondencia entre los registros de 
 El dataset procesado contiene una única observación por lance válido, sin duplicados según los identificadores empleados.
 
 El procedimiento de preparación y análisis se encuentra documentado en el notebook principal `notebooks/modelo_final_bacalao.ipynb`. La descripción detallada de las variables, sus características y tipos de datos se encuentra en el [Diccionario de datos](docs/diccionario_datos.md).
-  
+
+### Acceso y visualización de los datasets
+
+Los archivos originales de ICES-DATRAS correspondientes a los períodos 2020–2025 y 2026 están disponibles en la carpeta [`data/raw/`](data/raw/).
+
+Debido a su tamaño, GitHub no permite visualizar directamente su contenido. Sin embargo, ambos archivos pueden descargarse desde el repositorio para su consulta y procesamiento.
+
+El [dataset procesado](data/processed/lances_bacalao_procesado.csv), que contiene 1.970 lances válidos y 13 columnas, puede visualizarse directamente desde GitHub.
 
 ## 6. Metodología
 
