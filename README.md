@@ -225,11 +225,11 @@ Para reproducir el análisis:
 
 1. Descargar o clonar el repositorio.
 2. Preparar un entorno de Python con las dependencias indicadas en `environment.yml`.
-3. Verificar que los datasets originales se encuentren en `data/raw/`.
-4. Abrir [modelo_final_bacalao.ipynb](notebooks/modelo_final_bacalao.ipynb) en Jupyter Notebook.
+3. Acceder a los archivos de datos originales(CSV), disponibles para su descarga en la carpeta `data/raw/` del repositorio.
+4. Abrir `modelo_final_bacalao.ipynb` en Jupyter Notebook.
 5. Ejecutar las celdas en orden para reproducir el procesamiento, entrenamiento y evaluación.
 
-El repositorio también incluye el dataset procesado y el modelo entrenado, lo que facilita la consulta de los resultados obtenidos.
+El repositorio también contiene el conjunto de datos procesado (CSV) y el modelo de regresión logística entrenado (.joblib), lo que permite acceder a los datos utilizados y al modelo obtenido, facilitando la revisión y reproducción del trabajo.
 
 ## 10. Video de presentación del proyecto
 
