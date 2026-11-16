@@ -1,3 +1,4 @@
+
 # Clasificación de registros de bacalao del Atlántico mediante Aprendizaje Automático
 
 ## 1. Descripción del proyecto
@@ -10,11 +11,9 @@ Para ello, se utilizaron datos científicos de ICES-DATRAS, correspondientes a l
 
 A partir de estos datos, se construyó un conjunto de 1.970 lances válidos y se desarrolló un modelo de clasificación supervisada basado en **regresión logística**, utilizando como variables predictoras la latitud, la longitud y la profundidad del lance.
 
-El trabajo comprende la exploración y preparación de los datos, la comparación de algoritmos, el entrenamiento y la evaluación del modelo seleccionado, así como la interpretación de sus resultados. Para evaluar su capacidad de generalización, se utilizaron los registros de 2025 como conjunto de prueba y se realizó una evaluación adicional, de carácter preliminar, con datos de 2026.
+El propósito es explorar su posible utilidad como herramienta de apoyo para la planificación de futuras campañas de investigación pesquera.
 
-El propósito de esta herramienta es explorar su posible utilidad como apoyo para la planificación de futuras campañas de investigación pesquera, aportando una estimación anticipada basada en patrones identificados en los registros históricos.
-
-Es importante aclarar que el modelo predice la **probabilidad de obtener registros de bacalao durante un lance**, y no la presencia o ausencia real de la especie en una zona geográfica. Para utilizarlo antes de realizar el lance, es necesario conocer previamente la ubicación y la profundidad aproximada del lugar donde se realizará el muestreo.
+**Alcance:** el modelo estima la probabilidad de obtener registros de bacalao durante un lance, no la presencia o ausencia real de la especie en una zona geográfica.
 
 ## 2. Objetivo general
 
@@ -32,310 +31,128 @@ Desarrollar y evaluar un modelo de Aprendizaje Automático supervisado que permi
 
 5. Interpretar los resultados obtenidos, identificar las principales limitaciones del modelo y analizar su posible utilidad como herramienta de apoyo para la planificación de futuras campañas de investigación pesquera.
 
-## 4. Fuente de datos
+## 4. Desarrollo del proyecto en Jupyter Notebook
 
-Los datos utilizados en este proyecto provienen de **ICES-DATRAS**, una plataforma científica que reúne información de campañas internacionales de investigación pesquera.
+El proceso completo de exploración y preparación de datos, construcción de la variable objetivo, entrenamiento, validación y evaluación del modelo está documentado en la notebook principal.
 
-Para el desarrollo y entrenamiento del modelo se utilizaron registros de la campaña *North Sea International Bottom Trawl Survey* (NS-IBTS), correspondientes al primer trimestre de los años 2020 a 2025.
+**[Ver notebook del proyecto en Jupyter](notebooks/modelo_final_bacalao.ipynb)**
 
-**Fecha de adquisición de los datos:** 12 de octubre de 2026. Los archivos originales fueron descargados de ICES-DATRAS para su posterior procesamiento y análisis.
+La notebook contiene el código, las visualizaciones, las métricas y los resultados obtenidos durante el desarrollo del proyecto.
 
-**Características de la fuente:**
+## 5. Fuente de datos y características del dataset
 
-- **Organismo:** International Council for the Exploration of the Sea (ICES).
-- **Base de datos:** Database of Trawl Surveys (DATRAS).
+Los datos provienen de **ICES-DATRAS (Database of Trawl Surveys)**, una base de datos científica del Consejo Internacional para la Exploración del Mar (ICES).
+
 - **Campaña:** North Sea International Bottom Trawl Survey (NS-IBTS).
 - **Área geográfica:** Mar del Norte.
 - **Período principal:** Primer trimestre de 2020 a 2025.
-- **Período adicional:** Primer trimestre de 2026.
+- **Fecha de adquisición del conjunto principal:** 12 de octubre de 2026.
 - **Especie estudiada:** Bacalao del Atlántico (*Gadus morhua*).
 
-**Fuente oficial:** https://www.ices.dk/data/data-portals/Pages/DATRAS.aspx
+**Fuente oficial:** [ICES-DATRAS](https://www.ices.dk/data/data-portals/Pages/DATRAS.aspx).
 
-### Archivos utilizados
+### Dataset procesado
 
-Los datos se encuentran organizados en las siguientes carpetas del repositorio:
+Se seleccionaron 1.970 lances válidos (`HaulVal = V`) y se construyó la variable objetivo `presencia_bacalao`:
 
-| Archivo | Descripción |
-|---|---|
-| `data/raw/datras_ns_ibts_2020_2025_original.csv` | Datos originales utilizados para explorar, preparar, entrenar y evaluar el modelo con registros del período 2020–2025. |
-| `data/processed/lances_bacalao_procesado.csv` | Dataset procesado de 1.970 lances válidos, utilizado para desarrollar el modelo de clasificación. |
-| `data/raw/datras_ns_ibts_2026_original.csv` | Datos adicionales de 2026 utilizados para realizar una evaluación preliminar del modelo ya entrenado. |
+| Clase | Descripción | Lances | Porcentaje |
+|---|---|---:|---:|
+| 1 | Con registros de bacalao | 1.335 | 67,8 % |
+| 0 | Sin registros de bacalao | 635 | 32,2 % |
 
-### Uso de los datos de 2026
+La clase 0 representa una **no detección documentada durante el lance** y no demuestra la ausencia real de bacalao en la zona.
 
-Los registros de 2026 se utilizaron para comprobar cómo se desempeña el modelo frente a datos de un año posterior al período principal de estudio.
-
-Estos datos no se utilizaron para entrenar ni ajustar el modelo. Su incorporación permitió realizar una evaluación adicional de su capacidad para identificar registros de bacalao en nuevos lances de investigación.
-
-Esta evaluación se considera **preliminar**, debido a que corresponde a los registros disponibles de 2026 y no necesariamente representa la totalidad de las campañas de ese año.
-
-Los datasets incluidos en el repositorio permiten consultar los datos utilizados y facilitar la reproducción del análisis. **Se reconoce a ICES-DATRAS como fuente original de la información.**
-
-## 5. Descripción y características del dataset
-
-El conjunto de datos original de ICES-DATRAS contiene información sobre los lances realizados durante las campañas científicas y los registros biológicos de las especies identificadas.
-
-Los datos se organizan en dos tipos de registros:
-
-- **HH (Haul Header):** contiene información general de cada lance, como su ubicación, profundidad, duración y características del muestreo. Se identificaron 2.034 registros y 71 columnas.
-- **HL (Haul Length):** contiene información biológica de las especies registradas durante los lances. Se identificaron 134.934 registros y 30 columnas.
-
-### Preparación del conjunto de datos
-
-Para construir el dataset utilizado en el proyecto, se seleccionaron los lances considerados válidos por ICES-DATRAS, identificados mediante el código `HaulVal = V`.
-
-A partir de esta selección se obtuvieron **1.970 lances válidos**. Posteriormente, se relacionó la información general de cada lance con sus registros biológicos para identificar cuáles presentaban registros válidos de bacalao del Atlántico.
-
-Como resultado, se construyó un conjunto de datos procesado de **1.970 observaciones y 13 columnas**, con una única fila por lance.
-
-### Variable objetivo
-
-La variable `presencia_bacalao` permite clasificar los lances en dos categorías:
-
-- **Clase 1:** 1.335 lances con registros de bacalao (67,8 %).
-- **Clase 0:** 635 lances sin registros de bacalao (32,2 %).
-
-Es importante señalar que la clase 0 representa la ausencia de registros de la especie durante el lance y no demuestra que el bacalao esté ausente de esa zona.
-
-### Variables predictoras del modelo final
-
-Aunque durante la exploración se analizaron diferentes características de los lances, para entrenar el modelo definitivo se seleccionaron tres variables:
+El modelo final utiliza tres variables predictoras:
 
 | Variable | Descripción |
 |---|---|
-| `ShootLat` | Latitud del lugar donde se realiza el lance. |
-| `ShootLong` | Longitud del lugar donde se realiza el lance. |
+| `ShootLat` | Latitud del lance. |
+| `ShootLong` | Longitud del lance. |
 | `Depth` | Profundidad del lugar de muestreo. |
 
-Estas variables fueron seleccionadas porque permiten estudiar la relación entre la ubicación, la profundidad y los registros de bacalao.
+Para utilizar el modelo antes de un nuevo lance, es necesario disponer previamente de la ubicación y una estimación adecuada de la profundidad del lugar.
 
-La duración del lance (`HaulDur`) también se examinó durante la exploración, pero no se utilizó en el modelo final, dado que su valor real se conoce después de realizar el muestreo. Esta decisión mantiene la coherencia con el objetivo de realizar predicciones anticipadas.
+**Archivos disponibles:**
 
-### Otras variables del dataset
+- [Datos originales de 2020–2025](data/raw/datras_ns_ibts_2020_2025_original.csv).
+- [Dataset procesado](data/processed/lances_bacalao_procesado.csv).
+- [Datos adicionales de 2026](data/raw/datras_ns_ibts_2026_original.csv).
 
-El conjunto procesado también conserva ocho columnas identificadoras: `Survey`, `Quarter`, `Year`, `Country`, `Ship`, `Gear`, `HaulNo` y `StNo`.
+Los archivos originales pueden descargarse desde GitHub, aunque su tamaño impide visualizarlos directamente en la vista previa.
 
-Estas variables permiten identificar cada lance y su contexto, pero no se utilizaron como entradas del modelo definitivo.
+**Documentación complementaria:**
 
-### Tipos de variables del dataset
-
-El dataset procesado contiene variables numéricas y categóricas.
-
-- **Variables cuantitativas continuas:** `ShootLat` y `ShootLong`, almacenadas como números decimales (`float64`). La profundidad (`Depth`) también representa una magnitud continua, aunque está registrada en valores enteros (`int64`).
-- **Variable objetivo categórica binaria:** `presencia_bacalao`, codificada mediante los valores 0 y 1.
-- **Variables identificadoras y de contexto:** incluyen campaña, año, país, embarcación y equipo, entre otras. No se utilizan como variables predictoras del modelo final.
-  
-
-### Calidad de los datos
-
-Durante el procesamiento se verificó la correspondencia entre los registros de lances y la información biológica, se revisaron los tipos de datos y se comprobó la ausencia de valores faltantes en las variables seleccionadas.
-
-El dataset procesado contiene una única observación por lance válido, sin duplicados según los identificadores empleados.
-
-El procedimiento de preparación y análisis se encuentra documentado en el notebook principal `notebooks/modelo_final_bacalao.ipynb`. La descripción detallada de las variables, sus características y tipos de datos se encuentra en el [Diccionario de datos](docs/diccionario_datos.md).
-
-### Acceso y visualización de los datasets
-
-Los archivos originales de ICES-DATRAS correspondientes a los períodos 2020–2025 y 2026 están disponibles en la carpeta [`data/raw/`](data/raw/).
-
-Debido a su tamaño, GitHub no permite visualizar directamente su contenido. Sin embargo, ambos archivos pueden descargarse desde el repositorio para su consulta y procesamiento.
-
-El [dataset procesado](data/processed/lances_bacalao_procesado.csv), que contiene 1.970 lances válidos y 13 columnas, puede visualizarse directamente desde GitHub.
+- [Origen y adquisición de los datos](docs/origen_datos.md).
+- [Diccionario de datos](docs/diccionario_datos.md).
 
 ## 6. Metodología
 
-Para desarrollar el modelo de clasificación se siguieron diferentes etapas, desde la exploración de los registros científicos hasta la evaluación de su capacidad para realizar predicciones sobre datos de años posteriores.
+El proyecto comprendió las siguientes etapas:
 
-### Exploración y preparación de los datos
+1. **Exploración y preparación:** análisis de los registros HH y HL, selección de lances válidos, verificación de la calidad de los datos y construcción de la variable objetivo.
+2. **Selección de variables:** identificación de las características geográficas y de profundidad que pueden utilizarse para realizar predicciones anticipadas.
+3. **Entrenamiento:** implementación y comparación de Regresión Logística, K-Nearest Neighbors (KNN) y Árbol de Decisión.
+4. **Validación:** división temporal de los datos y evaluación del rendimiento mediante métricas de clasificación y matrices de confusión.
+5. **Interpretación:** análisis de los resultados, las limitaciones y las posibilidades de mejora.
 
-Inicialmente, se analizaron los registros de ICES-DATRAS para conocer su estructura, identificar las variables disponibles y verificar la calidad de los datos.
+### División temporal
 
-Se seleccionaron los lances válidos, se relacionaron sus características generales con los registros biológicos y se construyó la variable objetivo `presencia_bacalao`.
+| Conjunto | Período | Lances |
+|---|---|---:|
+| Entrenamiento y validación | 2020–2024 | 1.609 |
+| Prueba independiente | 2025 | 361 |
+| Evaluación adicional preliminar | 2026 | 324 |
 
-Posteriormente, se preparó un conjunto de 1.970 lances válidos y se seleccionaron tres variables predictoras: latitud, longitud y profundidad.
+Se aplicó validación cruzada temporal y se utilizó un `Pipeline` que integra `StandardScaler` y `LogisticRegression`, para evitar fugas de información durante el ajuste de las variables.
 
-### División temporal de los datos
+Se seleccionó la **regresión logística** por su rendimiento competitivo y su relativa facilidad de interpretación.
 
-Para evaluar el modelo de manera más realista, se realizó una división cronológica de los registros:
+El modelo final se conservó con `C = 1`, una configuración cuyo rendimiento fue cercano al mejor resultado obtenido mediante `GridSearchCV`.
 
-- **Entrenamiento:** 1.609 lances correspondientes al período 2020–2024.
-- **Prueba:** 361 lances correspondientes al año 2025.
+Los datos de 2026 se utilizaron para evaluar el modelo previamente entrenado, sin modificar sus parámetros.
 
-Esta separación permitió entrenar el modelo con información histórica y evaluar su desempeño sobre registros de un año posterior, sin utilizar los datos de prueba durante el entrenamiento.
+**Justificación de los procedimientos:** [Decisiones metodológicas](docs/decisiones_metodologicas.md).
 
-### Entrenamiento y comparación de modelos
+## 7. Resultados principales
 
-Durante el desarrollo se exploraron tres algoritmos de clasificación supervisada:
+El modelo de regresión logística se evaluó con datos de 2025 y, de manera complementaria, con registros disponibles de 2026.
 
-- **Regresión Logística:** estima la probabilidad de pertenecer a cada clase a partir de las variables predictoras.
-- **K-Nearest Neighbors (KNN):** clasifica los registros considerando la semejanza con otros ejemplos.
-- **Árbol de Decisión:** realiza clasificaciones mediante reglas basadas en las características de los datos.
-
-Para comparar las alternativas se utilizaron métricas de clasificación y validación temporal.
-
-Finalmente, se seleccionó la **regresión logística** por su desempeño competitivo y por permitir una interpretación relativamente sencilla de los resultados.
-
-### Validación temporal y ajuste del modelo
-
-Además de separar los datos de entrenamiento y prueba, se aplicó validación cruzada temporal, respetando el orden cronológico de los registros.
-
-Este procedimiento consistió en entrenar el modelo con datos de años anteriores y evaluarlo sobre un año posterior, ampliando progresivamente el período de entrenamiento.
-
-También se exploraron diferentes valores del parámetro de regularización `C` mediante `GridSearchCV`.
-
-Aunque se observaron pequeñas diferencias entre las configuraciones, se conservó el modelo de regresión logística con `C = 1`, debido a que presentó un rendimiento muy cercano al mejor valor encontrado y permitió mantener una configuración sencilla.
-
-El modelo se implementó mediante un `Pipeline` que integra la estandarización de las variables con `StandardScaler` y el algoritmo `LogisticRegression`.
-
-### Evaluación del desempeño
-
-El rendimiento del modelo se analizó mediante cuatro métricas principales:
-
-- **Accuracy (exactitud):** proporción total de predicciones correctas.
-- **Precision (precisión):** proporción de predicciones positivas que realmente corresponden a lances con registros de bacalao.
-- **Recall (sensibilidad):** proporción de lances con registros de bacalao que el modelo logra identificar.
-- **F1-score:** medida que combina precision y recall para evaluar su equilibrio.
-
-También se utilizaron matrices de confusión para observar los aciertos y errores correspondientes a ambas clases.
-
-La evaluación principal se realizó sobre los 361 lances del año 2025, que no participaron en el entrenamiento.
-
-### Evaluación adicional con registros de 2026
-
-Para ampliar el análisis, se utilizó un conjunto adicional de datos correspondientes a 2026.
-
-Después de aplicar los criterios de preparación, se obtuvieron **324 lances válidos**, sobre los cuales se evaluó el modelo previamente entrenado, sin modificar sus parámetros.
-
-Esta evaluación permitió observar cómo se comportaba el modelo frente a registros posteriores a los utilizados durante su desarrollo.
-
-Los resultados de 2026 se consideran preliminares y se interpretan como una evaluación complementaria, no como una confirmación definitiva de su desempeño futuro.
-
-### Guardado del modelo
-
-Una vez finalizado el entrenamiento, el modelo seleccionado se guardó en el archivo `models/modelo_logistico_bacalao.joblib`.
-
-Este archivo conserva el procesamiento de las variables y el clasificador entrenado, permitiendo reutilizarlos posteriormente sin necesidad de repetir todo el entrenamiento.
-
-El procedimiento completo se encuentra documentado en `notebooks/modelo_final_bacalao.ipynb`.
-
-## 7. Resultados y métricas del modelo
-
-El modelo de regresión logística se evaluó utilizando registros de años posteriores a los empleados durante su entrenamiento. Esta estrategia permitió analizar su capacidad para realizar predicciones sobre nuevos datos.
-
-### Resultados de la evaluación de 2025
-
-La evaluación principal se realizó sobre **361 lances correspondientes a 2025**, que no fueron utilizados durante el entrenamiento.
-
-| Métrica | Resultado |
-|---|---:|
-| Accuracy (exactitud) | 0,759 (75,9 %) |
-| Precision (precisión) | 0,752 (75,2 %) |
-| Recall (sensibilidad) | 0,950 (95,0 %) |
-| F1-score | 0,839 (83,9 %) |
-
-Los resultados indican que el modelo clasificó correctamente aproximadamente el **75,9 % de los lances evaluados**.
-
-El valor de recall fue especialmente elevado: el modelo identificó correctamente el **95 % de los lances que presentaban registros de bacalao**.
-
-Sin embargo, la precisión del 75,2 % indica que algunas predicciones de presencia correspondieron a lances en los que no se registró la especie.
-
-La matriz de confusión mostró 227 lances con registros de bacalao correctamente identificados y 47 lances sin registros correctamente clasificados. También se produjeron 75 falsas predicciones de presencia y 12 casos en los que el modelo no identificó registros de bacalao existentes.
-
-Esto evidencia que el modelo presenta una mayor capacidad para reconocer los lances con registros de bacalao que aquellos sin registros.
-
-### Evaluación adicional con datos de 2026
-
-Para comprobar el comportamiento del modelo frente a datos posteriores, se realizó una evaluación complementaria con **324 lances válidos correspondientes a 2026**.
-
-| Métrica | Resultado |
-|---|---:|
-| Accuracy (exactitud) | 0,738 (73,8 %) |
-| Precision (precisión) | 0,752 (75,2 %) |
-| Recall (sensibilidad) | 0,913 (91,3 %) |
-| F1-score | 0,825 (82,5 %) |
-
-En esta evaluación, el modelo clasificó correctamente el 73,8 % de los lances y logró identificar aproximadamente el 91,3 % de aquellos con registros de bacalao.
-
-La matriz de confusión mostró 200 lances con registros correctamente identificados y 39 lances sin registros correctamente clasificados. Se observaron también 66 falsas predicciones de presencia y 19 casos de registros de bacalao no identificados.
-
-Aunque los resultados fueron ligeramente inferiores a los obtenidos en 2025, el modelo mantuvo una sensibilidad elevada para identificar los lances con registros de la especie.
-
-Estos resultados deben interpretarse como preliminares, dado que corresponden al conjunto de registros disponibles de 2026 utilizado en el análisis.
-
-### Comparación de resultados
-
-| Métrica | Año 2025 | Año 2026 |
+| Métrica | Evaluación 2025 | Evaluación 2026 |
 |---|---:|---:|
 | Accuracy | 75,9 % | 73,8 % |
 | Precision | 75,2 % | 75,2 % |
 | Recall | 95,0 % | 91,3 % |
 | F1-score | 83,9 % | 82,5 % |
 
-La comparación muestra que el rendimiento del modelo se mantuvo relativamente estable entre ambas evaluaciones, con una disminución moderada en accuracy, recall y F1-score durante 2026.
+### Interpretación
 
-El principal resultado es su **alta capacidad para identificar lances con registros de bacalao**. No obstante, también se observa una dificultad importante para distinguir los lances sin registros, lo que genera predicciones positivas incorrectas.
+Los resultados muestran una **alta capacidad para identificar lances con registros de bacalao**, con valores de recall del 95,0 % en 2025 y del 91,3 % en 2026.
 
-Por lo tanto, el modelo presenta resultados prometedores como ejercicio de clasificación predictiva, aunque requiere mejoras antes de considerarse una herramienta confiable para apoyar decisiones operativas en campañas científicas.
+Sin embargo, el modelo presentó mayores dificultades para reconocer los lances sin registros de la especie, lo que se reflejó en una cantidad importante de falsos positivos.
 
-## 8. Conclusiones del proyecto
+La evaluación adicional de 2026 mostró un comportamiento relativamente similar al de 2025, aunque con una disminución moderada en algunas métricas.
 
-El desarrollo de este proyecto permitió aplicar técnicas de Aprendizaje Automático a datos científicos de investigación pesquera para estudiar la posibilidad de anticipar registros de bacalao del Atlántico en futuros lances del mar del Norte.
+### Conclusiones y limitaciones
 
-A partir de la exploración y preparación de los datos de ICES-DATRAS, se construyó un conjunto de 1.970 lances válidos y se entrenaron y compararon diferentes algoritmos de clasificación supervisada. Finalmente, se seleccionó la regresión logística por su rendimiento competitivo y su relativa facilidad de interpretación.
+El proyecto permitió comprobar que las características geográficas y de profundidad contienen información útil para clasificar los registros de bacalao durante los lances científicos estudiados.
 
-Los resultados obtenidos en las evaluaciones de 2025 y 2026 muestran que el modelo presenta una **alta capacidad para identificar lances en los que se registró bacalao**. Este comportamiento es relevante para el objetivo del proyecto, ya que permite explorar la posibilidad de realizar estimaciones antes de efectuar un muestreo, utilizando la ubicación y la profundidad aproximada del lugar.
+No obstante, los resultados deben interpretarse considerando las siguientes limitaciones:
 
-Sin embargo, también se identificó una dificultad importante: el modelo tiende a clasificar como positivos algunos lances en los que no se registró la especie. Esto significa que una predicción favorable no garantiza que se obtengan registros de bacalao durante el muestreo.
+- Dificultad para reconocer correctamente los lances sin registros de bacalao.
+- Uso de solamente tres variables predictoras.
+- Alcance restringido al área, las campañas y los períodos analizados.
+- Necesidad de conocer previamente la ubicación y la profundidad aproximada del lugar para realizar una predicción anticipada.
 
-La evaluación adicional de 2026 permitió observar que el modelo mantuvo un comportamiento similar al obtenido en 2025, aunque con una disminución moderada en algunas métricas. Este resultado aporta evidencia preliminar sobre su capacidad de generalización, pero no resulta suficiente para asegurar que mantendrá el mismo desempeño en otras campañas o condiciones.
+Como posibles mejoras futuras, se propone incorporar variables ambientales, explorar estrategias para reducir los falsos positivos y ampliar las evaluaciones con nuevos datos.
 
-En conclusión, el proyecto demuestra que es posible identificar patrones predictivos a partir de información geográfica y de profundidad de los lances. No obstante, **el modelo debe considerarse una herramienta experimental**, cuyo potencial para apoyar la planificación de campañas científicas requiere nuevas evaluaciones y mejoras.
+Por lo tanto, el modelo constituye una **aproximación experimental** y todavía no puede considerarse una herramienta operativa validada para la planificación de campañas científicas.
 
-El trabajo también permitió reconocer la importancia de preparar adecuadamente los datos, respetar el orden temporal durante la evaluación e interpretar las métricas considerando tanto los aciertos como los errores del modelo.
+**Análisis completo:** [Desarrollo del modelo y resultados](docs/modelo_resultados.md).
 
 
-## 9. Alcances y limitaciones del proyecto
+## 8. Organización del proyecto
 
-El modelo desarrollado permite estimar la probabilidad de obtener registros de bacalao del Atlántico en un lance de investigación pesquera, utilizando información sobre la ubicación geográfica y la profundidad del lugar donde se prevé realizar el muestreo.
-
-Su principal alcance consiste en explorar la posibilidad de utilizar datos históricos para anticipar resultados de futuros lances. Sin embargo, es necesario considerar algunas limitaciones.
-
-### Principales limitaciones
-
-**1. Diferencia entre ausencia de registros y ausencia de la especie**
-
-Un lance sin registros de bacalao no significa necesariamente que la especie esté ausente de esa zona. La falta de detección puede depender de las condiciones del muestreo y de otros factores que no fueron incluidos en el análisis.
-
-**2. Dificultad para identificar lances sin registros**
-
-Aunque el modelo logró reconocer una proporción elevada de lances con registros de bacalao, presentó mayores dificultades para clasificar aquellos sin registros. Esto produjo predicciones positivas incorrectas, que deben tenerse en cuenta al interpretar sus resultados.
-
-**3. Cantidad limitada de variables predictoras**
-
-El modelo utiliza solamente tres variables: latitud, longitud y profundidad. Existen otros factores ambientales y biológicos, como la temperatura del agua, que podrían influir en los registros de la especie y contribuir a mejorar las predicciones.
-
-**4. Alcance geográfico y temporal**
-
-Los datos corresponden a campañas científicas realizadas en el mar del Norte durante el primer trimestre de los años estudiados. Por lo tanto, los resultados no pueden generalizarse automáticamente a otras regiones, estaciones del año o modalidades de muestreo.
-
-**5. Aplicación anticipada del modelo**
-
-Para realizar una predicción antes de un lance, se necesita conocer previamente la ubicación y la profundidad aproximada del lugar de muestreo. Esta información debe obtenerse antes de utilizar el modelo, ya que no estaría disponible como resultado del propio lance.
-
-### Posibles mejoras futuras
-
-Como continuidad del proyecto, se podrían incorporar nuevas variables ambientales, ampliar la cantidad de campañas analizadas y evaluar otros algoritmos de clasificación.
-
-También sería conveniente mejorar la identificación de los lances sin registros de bacalao y realizar nuevas evaluaciones con datos posteriores, para comprobar si el modelo mantiene su desempeño en diferentes condiciones.
-
-En consecuencia, el modelo constituye una primera aproximación al problema predictivo y debe considerarse una herramienta experimental, cuyo uso en la planificación real de campañas requeriría evaluaciones adicionales.
-
-## 10. Organización del proyecto 
-
-El proyecto se organizó utilizando **Cookiecutter Data Science**, una plantilla que proporciona una estructura de carpetas para desarrollar proyectos de análisis de datos y Aprendizaje Automático.
-
-Esta organización permite separar los datos originales de los procesados, conservar el código de análisis, almacenar el modelo entrenado y reunir la documentación. De esta manera, se facilita la comprensión del trabajo, el seguimiento de sus etapas y la reproducción de los resultados.
+El proyecto se organizó utilizando **Cookiecutter Data Science**, una plantilla que proporciona una estructura de carpetas para desarrollar proyectos de análisis de datos y Aprendizaje Automático. Esta permite separar los datos originales de los procesados, conservar el código de análisis, almacenar el modelo entrenado y reunir la documentación técnica, facilitando la comprensión del trabajo y la reproducción de los resultados.
 
 ### Estructura del repositorio
 
@@ -360,12 +177,16 @@ clasificacion-bacalao-atlantico/
 │   └── modelo_logistico_bacalao.joblib
 │
 ├── docs/
-│   └── diccionario_datos.md
+│   ├── origen_datos.md
+│   ├── diccionario_datos.md
+│   ├── decisiones_metodologicas.md
+│   └── modelo_resultados.md
 │
 ├── reports/
 │   └── figures/
 │
 ├── references/
+│   └── fuentes_datos.md
 │
 ├── clasificacion_bacalao_atlantico/
 │
@@ -380,54 +201,38 @@ clasificacion-bacalao-atlantico/
 
 | Carpeta o archivo | Función |
 |---|---|
-| `data/raw/` | Contiene los datos originales obtenidos de ICES-DATRAS, correspondientes a los períodos 2020–2025 y 2026. |
+| `data/raw/` | Contiene los datos originales obtenidos de ICES-DATRAS. |
 | `data/processed/` | Almacena el dataset preparado para entrenar y evaluar el modelo. |
-| `data/external/` y `data/interim/` | Carpetas previstas por Cookiecutter para datos externos o resultados intermedios. |
-| `notebooks/` | Contiene el notebook principal con la exploración, preparación de datos, entrenamiento, evaluación e interpretación de resultados. |
-| `models/` | Guarda el modelo de regresión logística entrenado, para su posterior reutilización. |
-| `docs/` | Contiene el diccionario de datos y la documentación complementaria. |
-| `reports/figures/` | Carpeta destinada a guardar gráficos y figuras cuando se requieran archivos independientes. |
-| `references/` | Espacio reservado para materiales de consulta y documentación adicional. |
-| `clasificacion_bacalao_atlantico/` | Carpeta de código Python creada por la plantilla Cookiecutter. |
-| `README.md` | Presenta el proyecto, su metodología, resultados, conclusiones e instrucciones de reproducción. |
-| `.gitignore` | Evita incorporar al repositorio determinados archivos temporales y de configuración privada. |
+| `data/external/` y `data/interim/` | Carpetas previstas por Cookiecutter para datos externos e intermedios. |
+| `notebooks/` | Contiene el desarrollo completo del proyecto en Jupyter Notebook. |
+| `models/` | Guarda el modelo de regresión logística entrenado. |
+| `docs/` | Contiene la documentación del origen de los datos, el diccionario, las decisiones metodológicas y el análisis de resultados. |
+| `reports/figures/` | Carpeta destinada a gráficos y figuras. |
+| `references/` | Contiene las fuentes y referencias utilizadas. |
+| `clasificacion_bacalao_atlantico/` | Carpeta de código Python creada por Cookiecutter. |
+| `README.md` | Presenta los objetivos, la metodología, los resultados y el acceso a la documentación. |
+| `.gitignore` | Excluye archivos temporales y otros elementos que no deben incorporarse al repositorio. |
 
-La estructura permite distinguir los archivos utilizados en el análisis de los resultados obtenidos y del modelo entrenado.
+El desarrollo completo se encuentra en la [notebook principal](notebooks/modelo_final_bacalao.ipynb), mientras que el modelo entrenado está disponible en [models/](models/).
 
-El desarrollo principal se encuentra en `notebooks/modelo_final_bacalao.ipynb`, mientras que el modelo guardado está disponible en `models/modelo_logistico_bacalao.joblib`.
+La documentación técnica se encuentra organizada en la carpeta [docs/](docs/).
 
-## 11. Reproducción del análisis
+## 9. Reproducción del análisis
 
-El proyecto fue desarrollado en Python, utilizando Jupyter Notebook para la exploración, preparación de los datos, entrenamiento y evaluación del modelo de Aprendizaje Automático.
+El proyecto fue desarrollado en **Python y Jupyter Notebook**, utilizando principalmente pandas, NumPy, Matplotlib, scikit-learn y joblib.
 
-### Herramientas y bibliotecas utilizadas
+Para reproducir el análisis:
 
-- **Python:** lenguaje de programación utilizado para desarrollar el proyecto.
-- **Jupyter Notebook:** entorno donde se documentó y ejecutó el análisis.
-- **pandas y NumPy:** manipulación y procesamiento de los datos.
-- **Matplotlib:** elaboración de gráficos para explorar e interpretar los resultados.
-- **scikit-learn:** entrenamiento, validación y evaluación de los modelos de clasificación.
-- **joblib:** almacenamiento del modelo entrenado.
-- **Git y GitHub:** control de versiones y publicación del proyecto.
+1. Descargar o clonar el repositorio.
+2. Preparar un entorno de Python con las dependencias indicadas en `environment.yml`.
+3. Verificar que los datasets originales se encuentren en `data/raw/`.
+4. Abrir [modelo_final_bacalao.ipynb](notebooks/modelo_final_bacalao.ipynb) en Jupyter Notebook.
+5. Ejecutar las celdas en orden para reproducir el procesamiento, entrenamiento y evaluación.
 
-### Pasos para reproducir el análisis
+El repositorio también incluye el dataset procesado y el modelo entrenado, lo que facilita la consulta de los resultados obtenidos.
 
-1. Descargar o clonar el repositorio de GitHub.
-2. Preparar un entorno de Python con las bibliotecas necesarias.
-3. Abrir el archivo `notebooks/modelo_final_bacalao.ipynb` en Jupyter Notebook.
-4. Verificar que los datasets originales se encuentren en `data/raw/`.
-5. Ejecutar las celdas del notebook en el orden establecido para reproducir la preparación de datos, el entrenamiento y las evaluaciones.
+## 10. Video de presentación del proyecto
 
-El notebook contiene las explicaciones, los procedimientos y los resultados del análisis.
+En el siguiente video se presenta una síntesis del proyecto, incluyendo el problema abordado, la fuente de datos, la metodología, los resultados de las evaluaciones y las principales conclusiones.
 
-Además, el repositorio incluye el dataset procesado en `data/processed/`, el diccionario de datos en `docs/` y el modelo entrenado en `models/`.
-
-La reproducción completa requiere contar con las bibliotecas utilizadas y un entorno de Python compatible.
-
-## 12. Video de presentación del proyecto
-
-En el siguiente video se presenta una síntesis del proyecto, incluyendo el problema abordado, los datos utilizados, la metodología de entrenamiento, los resultados de las evaluaciones y las principales conclusiones.
-
-
-**Video de presentación del proyecto:** [Ver video](https://drive.google.com/file/d/1WXjzQ8kyhO8HOWAbmn2vG2v30yrvNo4e/view?usp=drive_link)
-  
+**[Ver video de presentación del proyecto](https://drive.google.com/file/d/1WXjzQ8kyhO8HOWAbmn2vG2v30yrvNo4e/view?usp=drive_link)** 
