@@ -38,6 +38,8 @@ Los datos utilizados en este proyecto provienen de **ICES-DATRAS**, una platafor
 
 Para el desarrollo y entrenamiento del modelo se utilizaron registros de la campaña *North Sea International Bottom Trawl Survey* (NS-IBTS), correspondientes al primer trimestre de los años 2020 a 2025.
 
+**Fecha de adquisición de los datos:** 12 de octubre de 2026. Los archivos originales fueron descargados de ICES-DATRAS para su posterior procesamiento y análisis.
+
 **Características de la fuente:**
 
 - **Organismo:** International Council for the Exploration of the Sea (ICES).
@@ -116,13 +118,23 @@ El conjunto procesado también conserva ocho columnas identificadoras: `Survey`,
 
 Estas variables permiten identificar cada lance y su contexto, pero no se utilizaron como entradas del modelo definitivo.
 
+### Tipos de variables del dataset
+
+El dataset procesado contiene variables numéricas y categóricas.
+
+- **Variables cuantitativas continuas:** `ShootLat` y `ShootLong`, almacenadas como números decimales (`float64`). La profundidad (`Depth`) también representa una magnitud continua, aunque está registrada en valores enteros (`int64`).
+- **Variable objetivo categórica binaria:** `presencia_bacalao`, codificada mediante los valores 0 y 1.
+- **Variables identificadoras y de contexto:** incluyen campaña, año, país, embarcación y equipo, entre otras. No se utilizan como variables predictoras del modelo final.
+  
+
 ### Calidad de los datos
 
 Durante el procesamiento se verificó la correspondencia entre los registros de lances y la información biológica, se revisaron los tipos de datos y se comprobó la ausencia de valores faltantes en las variables seleccionadas.
 
 El dataset procesado contiene una única observación por lance válido, sin duplicados según los identificadores empleados.
 
-El procedimiento de preparación y análisis se encuentra documentado en el notebook principal `notebooks/modelo_final_bacalao.ipynb`. La descripción detallada de las columnas está disponible en `docs/diccionario_datos.md`.
+El procedimiento de preparación y análisis se encuentra documentado en el notebook principal `notebooks/modelo_final_bacalao.ipynb`. La descripción detallada de las variables, sus características y tipos de datos se encuentra en el [Diccionario de datos](docs/diccionario_datos.md).
+  
 
 ## 6. Metodología
 
@@ -409,4 +421,6 @@ La reproducción completa requiere contar con las bibliotecas utilizadas y un en
 
 En el siguiente video se presenta una síntesis del proyecto, incluyendo el problema abordado, los datos utilizados, la metodología de entrenamiento, los resultados de las evaluaciones y las principales conclusiones.
 
-**Video de presentación:** [Ver presentación del proyecto](PEGAR_AQUI_ENLACE_DEL_VIDEO)
+
+**Video de presentación del proyecto final:** [Ver video con subtítulos en español (6 min 36 s)](https://drive.google.com/file/d/1WXjzQ8kyhO8HOWAbmn2vG2v30yrvNo4e/view?usp=drive_link)
+  
