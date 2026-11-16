@@ -422,5 +422,5 @@ La reproducción completa requiere contar con las bibliotecas utilizadas y un en
 En el siguiente video se presenta una síntesis del proyecto, incluyendo el problema abordado, los datos utilizados, la metodología de entrenamiento, los resultados de las evaluaciones y las principales conclusiones.
 
 
-**Video de presentación del proyecto final:** [Ver video con subtítulos en español (6 min 36 s)](https://drive.google.com/file/d/1WXjzQ8kyhO8HOWAbmn2vG2v30yrvNo4e/view?usp=drive_link)
+**Video de presentación del proyecto:** [Ver video](https://drive.google.com/file/d/1WXjzQ8kyhO8HOWAbmn2vG2v30yrvNo4e/view?usp=drive_link)
   
