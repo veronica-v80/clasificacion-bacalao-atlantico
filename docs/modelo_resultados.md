@@ -27,7 +27,7 @@ La regresión logística se implementó mediante un `Pipeline` que integra `Stan
 
 Se compararon los algoritmos mediante métricas de clasificación, utilizando el F1-score como uno de los criterios principales.
 
-La regresión logística presentó un rendimiento y fue seleccionada como modelo final debido también a su facilidad de interpretación.
+Se seleccionó la regresión logística porque obtuvo buenos resultados al evaluar su capacidad de realizar predicciones con datos de distintos años. Además, permite comprender con mayor facilidad cómo las variables utilizadas influyen en las predicciones, lo que facilita la interpretación de los resultados.
 
 Se realizó una búsqueda de hiperparámetros con `GridSearchCV`, evaluando los valores:
 
